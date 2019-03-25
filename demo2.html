@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+
+<body>
+    <input type="search" id="search" placeholder="请输入想查找的商品" value="">
+    <input type="button" value="搜索" onclick="saveStorage('search');" />
+    <br>
+    最近搜索
+    <br>
+    <p id="msg"></p>
+</body>
+<script type="text/javascript">
+    function saveStorage(id) {
+        var data = document.getElementById(id).value;
+        var time = new Date().getTime();
+        localStorage.setItem(time, data);
+        loadStorage('msg');
+    }
+
+    function loadStorage(id) {
+        var result ="<table>";
+        for (var i = 0; i < localStorage.length; i++) {
+            var key = localStorage.key(i);
+            var value = localStorage.getItem(key);
+            result += '<tr><td>' + value;
+        }
+        result += '</table>';
+        var target = document.getElementById(id);
+        target.innerHTML = result;
+        console.log(result);
+    }
+</script>
+
+</html>
