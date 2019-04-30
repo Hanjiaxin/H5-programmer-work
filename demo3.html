@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>刮刮乐</title>
+</head>
+<body>
+    <canvas style="border: 1px solid black; background: url(aa.jpg)" id="myImg"></canvas>
+    <img src="aa.jpg" style="display: none;">
+    <script>
+        var canvas = document.getElementById('myImg');
+        var Img = document.getElementsByTagName('img')[0];
+        canvas.width = 300;
+        canvas.height = 300;
+        var context = canvas.getContext("2d");
+        context.fillStyle = '#ccc';
+        context.fillRect(0,0,canvas.width,canvas.height);
+        context.drawImage(Img,0,0);
+        var imgData = context.getImageData(0,0,canvas.width,canvas.height);
+        for (var i=0;i<imgData.data.length;i+=4)
+        {
+            var average = (imgData.data[i] + imgData.data[i + 1] + imgData.data[i + 2]) / 3;
+            imgData.data[i]=average;
+            imgData.data[i+1]=average;
+            imgData.data[i+2]=average;
+            imgData.data[i+3]=255;
+        }
+        context.putImageData(imgData,0,0);
+        for(var i=0,j=0;i<imgData.data.length;i+=4) {
+            if (imgData.data[i] && imgData.data[i + 1] && imgData.data[i + 2] && imgData.data[i + 3]) {
+                j++;
+            }
+        }
+        if(j<=canvas.width*canvas.height*0.85){
+            context.clearRect(0,0,canvas.width,canvas.height);
+        }
+        canvas.onmousedown = function() {
+            canvas.onmousemove = function(e) {
+                var e = e || window.event;
+                // e.clientX, e.clientY
+                context.globalCompositeOperation = 'destination-out';
+                context.beginPath();
+                context.arc(e.clientX, e.clientY, 20, 0, Math.PI*2, false);//获取当前鼠标的横纵坐标作为填充的位置
+                context.fillStyle = "rgba(0,0,0,1)";
+                context.fill();
+            }
+        }
+        canvas.onmouseup = function() {
+            canvas.onmousemove = '';
+        }
+    </script>
+</body>
+</html>
